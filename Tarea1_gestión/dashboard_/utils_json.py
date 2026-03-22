@@ -1,9 +1,14 @@
 import re
 import json
+import os
 import pandas as pd
 import streamlit as st
 import nltk
 from nltk.sentiment.vader import SentimentIntensityAnalyzer
+
+# CONSTANTS
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DEFAULT_JSON_PATH = os.path.join(BASE_DIR, "movie.json")
 
 # =========================
 # Sentimiento
@@ -99,12 +104,12 @@ def extract_review_text(review_item):
 # =========================
 
 @st.cache_data
-def load_raw_json(json_path="movie.json"):
+def load_raw_json(json_path=DEFAULT_JSON_PATH):
     with open(json_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
 @st.cache_data
-def load_movies(json_path="movie.json"):
+def load_movies(json_path=DEFAULT_JSON_PATH):
     raw = load_raw_json(json_path)
 
     rows = []
@@ -126,7 +131,7 @@ def load_movies(json_path="movie.json"):
     return df
 
 @st.cache_data
-def load_reviews(json_path="movie.json"):
+def load_reviews(json_path=DEFAULT_JSON_PATH):
     raw = load_raw_json(json_path)
 
     rows = []
@@ -210,7 +215,7 @@ def build_movie_dashboard_df(movies_df, reviews_df):
     return merged
 
 @st.cache_data
-def load_all_data(json_path="movie.json"):
+def load_all_data(json_path=DEFAULT_JSON_PATH):
     movies = load_movies(json_path)
     reviews = load_reviews(json_path)
     dashboard_df = build_movie_dashboard_df(movies, reviews)
